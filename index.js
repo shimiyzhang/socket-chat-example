@@ -46,6 +46,18 @@ if (cluster.isPrimary) {
   });
 
   io.on("connection", async (socket) => {
+    io.emit("chat message", {
+      type: "connection",
+      msg: `${socket.id} connected`,
+    });
+
+    socket.on("disconnect", () => {
+      io.emit("chat message", {
+        type: "disconnect",
+        msg: `${socket.id} disconnected`,
+      });
+    });
+
     socket.on("chat message", async (msg, clientOffset, callback) => {
       let result;
       try {
